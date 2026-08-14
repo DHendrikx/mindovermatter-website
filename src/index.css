@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.13 0.025 250);
+  --foreground: oklch(0.92 0.01 250);
+  --card: oklch(0.16 0.025 250);
+  --card-foreground: oklch(0.92 0.01 250);
+  --primary: oklch(0.82 0.17 195);
+  --primary-foreground: oklch(0.13 0.025 250);
+  --muted: oklch(0.20 0.02 250);
+  --muted-foreground: oklch(0.65 0.02 250);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.25 0.02 250);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  }
+  a[href],
+  button:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 1280px;
+    }
+  }
+
+  .glass-card {
+    background: oklch(0.16 0.025 250 / 60%);
+    backdrop-filter: blur(12px);
+    border: 1px solid oklch(0.30 0.02 250 / 40%);
+  }
+
+  .glass-card:hover {
+    border-color: oklch(0.82 0.17 195 / 30%);
+    background: oklch(0.18 0.025 250 / 70%);
+  }
+
+  .cyan-line {
+    height: 3px;
+    width: 48px;
+    background: oklch(0.82 0.17 195);
+  }
+
+  .section-bg {
+    background: linear-gradient(180deg, oklch(0.13 0.025 250) 0%, oklch(0.11 0.02 250) 100%);
+  }
+
+  .section-bg-alt {
+    background: linear-gradient(180deg, oklch(0.11 0.02 250) 0%, oklch(0.13 0.025 250) 100%);
+  }
+}
+
+/* Smooth scrolling, but not for users who asked for less motion */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: oklch(0.13 0.025 250);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.30 0.02 250);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.82 0.17 195 / 50%);
+}
