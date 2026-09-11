@@ -74,10 +74,10 @@ export default function Disclaimer() {
                 <p className="text-muted-foreground leading-relaxed">
                   Voor vragen over deze disclaimer of de inhoud van deze website kunt u contact opnemen via{" "}
                   <a
-                    href="mailto:contact@mindovermatter.fund"
+                    href="mailto:contact@mindovermatter.limited"
                     className="text-[oklch(0.82_0.17_195)] hover:underline"
                   >
-                    contact@mindovermatter.fund
+                    contact@mindovermatter.limited
                   </a>
                   .
                 </p>

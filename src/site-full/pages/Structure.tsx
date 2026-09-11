@@ -6,7 +6,7 @@
 import { FadeIn, FadeInStagger, FadeInChild, CyanLine } from "@/components/AnimatedSection";
 import { Link } from "wouter";
 import { ArrowRight, Building2, Scale, Landmark, BarChart3 } from "lucide-react";
-import TaxFlowDiagram from "@/components/TaxFlowDiagram";
+import TaxFlowDiagram from "@/site-full/components/TaxFlowDiagram";
 
 const STRUCTURE_BG = "/images/structure-background.jpg";
 

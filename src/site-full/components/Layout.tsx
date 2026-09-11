@@ -168,10 +168,10 @@ function Footer() {
               <p>Mind over Matter</p>
               <p>Isle of Man</p>
               <a
-                href="mailto:contact@mindovermatter.fund"
+                href="mailto:contact@mindovermatter.limited"
                 className="hover:text-[oklch(0.82_0.17_195)] transition-colors"
               >
-                contact@mindovermatter.fund
+                contact@mindovermatter.limited
               </a>
             </div>
           </div>

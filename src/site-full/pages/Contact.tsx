@@ -48,12 +48,12 @@ export default function Contact() {
               </p>
 
               <a
-                href="mailto:contact@mindovermatter.fund"
+                href="mailto:contact@mindovermatter.limited"
                 className="inline-flex items-center gap-3 px-8 py-4 bg-[oklch(0.82_0.17_195_/_8%)] border border-[oklch(0.82_0.17_195_/_30%)] rounded-xl hover:bg-[oklch(0.82_0.17_195_/_15%)] hover:border-[oklch(0.82_0.17_195_/_50%)] transition-all duration-300 group"
               >
                 <Mail className="text-[oklch(0.82_0.17_195)]" size={20} />
                 <span className="text-lg font-semibold text-[oklch(0.82_0.17_195)]">
-                  contact@mindovermatter.fund
+                  contact@mindovermatter.limited
                 </span>
               </a>
 
