@@ -1,0 +1,310 @@
+/*
+ * Stijlen voor de interne Analyst Research-omgeving: het rapport (markdown),
+ * de weergave van de one-pager en de printregels.
+ */
+
+/* ─── Printversies staan buiten beeld tot er geprint wordt ─── */
+
+.print-root {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.print-root--report {
+  display: none;
+}
+
+/* ─── One-pager op het scherm ─── */
+
+.onepager-stage {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  padding: 4px 0 32px;
+}
+
+.onepager-stage .op-sheet {
+  flex-shrink: 0;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 40%);
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 820px) {
+  .onepager-stage {
+    padding: 0 0 24px;
+  }
+
+  .onepager-stage .op-sheet {
+    box-shadow: none;
+    border-radius: 12px;
+  }
+}
+
+/* ─── Rapport (markdown) ─── */
+
+.report-prose {
+  --rp-text: oklch(0.86 0.01 250);
+  --rp-strong: oklch(0.95 0.01 250);
+  --rp-muted: oklch(0.65 0.02 250);
+  --rp-rule: oklch(0.28 0.02 250);
+  --rp-accent: oklch(0.82 0.17 195);
+  --rp-table-head: oklch(0.17 0.025 250);
+
+  max-width: 860px;
+  color: var(--rp-text);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.report-prose .report-titleblock {
+  margin-bottom: 2rem;
+}
+
+.report-prose .report-kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rp-accent);
+}
+
+.report-prose h1 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--rp-strong);
+}
+
+.report-prose .report-meta {
+  margin-top: 0.25rem;
+  color: var(--rp-muted);
+}
+
+.report-prose h2 {
+  margin: 2.75rem 0 1rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--rp-strong);
+}
+
+.report-prose section:first-of-type h2 {
+  margin-top: 0;
+}
+
+.report-prose h2::before {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin-bottom: 1rem;
+  background: var(--rp-accent);
+}
+
+.report-prose h3 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--rp-strong);
+}
+
+.report-prose h4 {
+  margin: 1.25rem 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--rp-strong);
+}
+
+.report-prose p {
+  margin: 0.7rem 0;
+}
+
+.report-prose ul,
+.report-prose ol {
+  margin: 0.7rem 0;
+  padding-left: 1.4rem;
+}
+
+.report-prose ul {
+  list-style: disc;
+}
+
+.report-prose ol {
+  list-style: decimal;
+}
+
+.report-prose li {
+  margin: 0.3rem 0;
+}
+
+.report-prose strong {
+  color: var(--rp-strong);
+  font-weight: 700;
+}
+
+.report-prose a {
+  color: var(--rp-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.report-prose blockquote {
+  margin: 1rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--rp-accent);
+  color: var(--rp-text);
+  font-style: italic;
+}
+
+.report-prose code {
+  font-size: 0.9em;
+}
+
+.report-prose hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--rp-rule);
+}
+
+.report-table {
+  margin: 1rem 0 1.25rem;
+  overflow-x: auto;
+}
+
+.report-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.report-prose th {
+  background: var(--rp-table-head);
+  color: var(--rp-strong);
+  font-weight: 700;
+  text-align: left;
+}
+
+.report-prose th,
+.report-prose td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--rp-rule);
+  vertical-align: top;
+}
+
+.report-prose td {
+  font-variant-numeric: tabular-nums;
+}
+
+.report-prose .report-appendix {
+  margin-top: 3rem;
+}
+
+.report-prose .report-disclaimer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rp-rule);
+  font-size: 0.8rem;
+  color: var(--rp-muted);
+}
+
+.live-tail {
+  max-height: 9rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 30%);
+  mask-image: linear-gradient(to bottom, transparent, black 30%);
+}
+
+/* ─── Printen ─── */
+
+@page {
+  size: A4 portrait;
+  margin: 16mm 15mm 18mm;
+}
+
+@page onepager {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  html:not([data-print]) .print-root {
+    display: none !important;
+  }
+
+  html[data-print] body {
+    background: #fff !important;
+  }
+
+  html[data-print] #root,
+  html[data-print] .print-root {
+    display: none !important;
+  }
+
+  html[data-print="onepager"] .print-root--onepager,
+  html[data-print="report"] .print-root--report {
+    display: block !important;
+    position: static;
+    left: auto;
+    visibility: visible;
+  }
+
+  html[data-print="onepager"] .print-root--onepager .op-sheet {
+    page: onepager;
+    height: 296.5mm;
+    break-after: avoid;
+  }
+
+  .print-root--report .report-prose {
+    --rp-text: #1d2433;
+    --rp-strong: #0f1a33;
+    --rp-muted: #5b6577;
+    --rp-rule: #d9dee7;
+    --rp-accent: #16719a;
+    --rp-table-head: #eef1f6;
+
+    max-width: none;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+
+  .print-root--report .report-prose h1 {
+    font-size: 20pt;
+  }
+
+  .print-root--report .report-prose h2 {
+    font-size: 14pt;
+    break-after: avoid;
+  }
+
+  .print-root--report .report-prose h3,
+  .print-root--report .report-prose h4 {
+    break-after: avoid;
+  }
+
+  .print-root--report .report-prose table {
+    font-size: 8.5pt;
+  }
+
+  .print-root--report .report-prose tr,
+  .print-root--report .report-prose blockquote {
+    break-inside: avoid;
+  }
+
+  .print-root--report .report-table {
+    overflow: visible;
+  }
+
+  .print-root--report .report-prose a {
+    color: #16719a;
+    text-decoration: none;
+  }
+}

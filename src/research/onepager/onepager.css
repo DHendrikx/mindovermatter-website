@@ -1,0 +1,714 @@
+/*
+ * One-pager: A4 op wit papier in de huisstijl van Mind over Matter.
+ * Bewust gewone CSS (geen Tailwind): dit bestand gaat ook letterlijk mee in de
+ * losse HTML-download. Alle maten schalen mee met --op-scale, zodat de pagina
+ * zichzelf passend kan maken op één A4.
+ */
+
+.op-sheet {
+  --op-scale: 1;
+  --op-ink: #0f1a33;
+  --op-ink-2: #3b4760;
+  --op-muted: #667085;
+  --op-rule: #e3e7ee;
+  --op-panel: #f5f7fa;
+  --op-navy: #14213d;
+  --op-teal: #16719a;
+  --op-orange: #d97a2b;
+  --op-cyan: #00b8d4;
+
+  box-sizing: border-box;
+  width: 210mm;
+  height: 297mm;
+  padding: 9mm 10mm 6mm;
+  background: #fff;
+  color: var(--op-ink);
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: calc(10.5px * var(--op-scale));
+  line-height: 1.38;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.op-sheet *,
+.op-sheet *::before,
+.op-sheet *::after {
+  box-sizing: border-box;
+}
+
+.op-sheet h1,
+.op-sheet h2,
+.op-sheet p,
+.op-sheet ul {
+  margin: 0;
+  padding: 0;
+}
+
+.op-inner {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: calc(2.3mm * var(--op-scale));
+}
+
+.op-inner > * {
+  flex-shrink: 0;
+}
+
+/* ─── Kop ─── */
+
+.op-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 6mm;
+  padding-bottom: 2mm;
+  border-bottom: 2px solid var(--op-navy);
+}
+
+.op-brand {
+  display: flex;
+  align-items: center;
+  gap: 3.5mm;
+  min-width: 0;
+}
+
+.op-logo {
+  width: 17mm;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.op-kicker {
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--op-teal);
+}
+
+.op-title {
+  font-size: 2.05em;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--op-navy);
+}
+
+.op-ticker {
+  margin-left: 0.45em;
+  padding-left: 0.45em;
+  border-left: 2px solid var(--op-rule);
+  font-weight: 600;
+  color: var(--op-ink-2);
+}
+
+.op-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  font-size: 0.85em;
+  color: var(--op-muted);
+}
+
+.op-date strong {
+  font-size: 1.1em;
+  color: var(--op-ink);
+}
+
+/* ─── Kernthese ─── */
+
+.op-thesis {
+  font-size: 1.32em;
+  font-weight: 600;
+  line-height: 1.32;
+  color: var(--op-navy);
+  padding-left: 3mm;
+  border-left: 3px solid var(--op-cyan);
+}
+
+/* ─── Onafhankelijke beoordeling ─── */
+
+.op-balance {
+  display: grid;
+  grid-template-columns: 62mm 1fr;
+  gap: 5mm;
+  align-items: center;
+  padding: 2.2mm 3.2mm;
+  background: var(--op-panel);
+  border-radius: 2mm;
+}
+
+.op-label {
+  display: block;
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--op-muted);
+}
+
+.op-balance-numbers {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin: 0.5mm 0 1.2mm;
+  font-size: 1.55em;
+  font-weight: 800;
+}
+
+.op-sep {
+  color: var(--op-rule);
+  font-weight: 400;
+}
+
+.op-balancebar {
+  display: flex;
+  gap: 2px;
+  height: 2.2mm;
+}
+
+.op-balancebar span:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.op-balancebar span:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.op-note {
+  display: block;
+  margin-top: 0.9mm;
+  font-size: 0.76em;
+  color: var(--op-muted);
+}
+
+.op-verdict {
+  font-size: 1.08em;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--op-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.op-horizon {
+  margin-top: 1.2mm;
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--op-teal);
+}
+
+/* ─── Kerncijfers ─── */
+
+.op-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3mm;
+}
+
+.op-metric {
+  display: flex;
+  flex-direction: column;
+  padding: 1.9mm 2.6mm;
+  border: 1px solid var(--op-rule);
+  border-top: 3px solid var(--op-navy);
+  border-radius: 1.5mm;
+  min-width: 0;
+}
+
+.op-metric-label {
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--op-ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.op-metric-value {
+  font-size: 1.7em;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--op-navy);
+  white-space: nowrap;
+}
+
+.op-metric-note {
+  font-size: 0.78em;
+  color: var(--op-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Panelen en grafieken ─── */
+
+.op-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm;
+}
+
+.op-panel {
+  padding: 2.2mm 2.6mm 1.4mm;
+  border: 1px solid var(--op-rule);
+  border-radius: 1.5mm;
+  min-width: 0;
+}
+
+.op-paneltitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 3mm;
+  margin-bottom: 1mm;
+}
+
+.op-h {
+  font-size: 0.82em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--op-navy);
+}
+
+.op-h::before {
+  content: "";
+  display: inline-block;
+  width: 4mm;
+  height: 2px;
+  margin-right: 1.6mm;
+  vertical-align: middle;
+  background: var(--op-cyan);
+}
+
+.op-aside {
+  font-size: 0.78em;
+  color: var(--op-muted);
+  text-align: right;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.op-sub {
+  font-size: 0.8em;
+  color: var(--op-muted);
+  margin-bottom: 0.8mm;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.op-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: inherit;
+  overflow: visible;
+}
+
+.op-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.op-empty {
+  color: var(--op-muted);
+  padding: 2mm 0;
+}
+
+.op-subrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 3mm;
+}
+
+.op-subrow .op-sub {
+  min-width: 0;
+}
+
+.op-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2mm;
+  flex-shrink: 0;
+  font-size: 0.78em;
+  color: var(--op-muted);
+}
+
+.op-key i {
+  display: inline-block;
+  width: 4.5mm;
+  height: 0;
+  margin-left: 1.5mm;
+  border-top: 2px solid var(--op-teal);
+}
+
+.op-key i.op-key-dashed {
+  border-top-style: dashed;
+}
+
+/* ─── Bull en bear ─── */
+
+.op-case {
+  padding: 2.2mm 2.8mm;
+  border-radius: 1.5mm;
+  background: var(--op-panel);
+}
+
+.op-h--dot::before {
+  display: none;
+}
+
+.op-h--dot i {
+  display: inline-block;
+  width: 2.4mm;
+  height: 2.4mm;
+  margin-right: 1.6mm;
+  border-radius: 50%;
+  vertical-align: -0.1em;
+}
+
+.op-case--bull .op-h--dot i {
+  background: var(--op-teal);
+}
+
+.op-case--bear .op-h--dot i {
+  background: var(--op-orange);
+}
+
+.op-case ul {
+  list-style: none;
+  margin-top: 1.4mm;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9mm;
+}
+
+.op-case li {
+  position: relative;
+  padding-left: 3.2mm;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.op-case li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 1.4mm;
+  height: 2px;
+  background: var(--op-ink-2);
+}
+
+/* ─── Marktkaart en lijsten ─── */
+
+.op-map {
+  gap: 4mm;
+}
+
+.op-maplabel {
+  font-size: 0.78em;
+  font-weight: 700;
+  color: var(--op-ink-2);
+  margin-bottom: 1mm;
+}
+
+.op-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2mm;
+}
+
+.op-chips li {
+  padding: 0.5mm 2mm;
+  border-radius: 99px;
+  font-size: 0.86em;
+  background: #fbeee2;
+  color: #7a3f0d;
+}
+
+.op-chips--structural li {
+  background: #e3f0f6;
+  color: #0d4a66;
+}
+
+.op-watch {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4mm;
+}
+
+.op-watch li {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1.2mm;
+  border-bottom: 1px solid var(--op-rule);
+}
+
+.op-watch li:last-child {
+  border-bottom: 0;
+}
+
+.op-watch span {
+  font-size: 0.9em;
+  color: var(--op-ink-2);
+}
+
+/* ─── Tabellen ─── */
+
+.op-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.op-table th {
+  padding: 0 1.6mm 1mm 0;
+  font-size: 0.76em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--op-muted);
+  border-bottom: 1px solid var(--op-rule);
+}
+
+.op-table td {
+  padding: 0.75mm 1.6mm 0.75mm 0;
+  vertical-align: top;
+  border-bottom: 1px solid var(--op-rule);
+  color: var(--op-ink-2);
+}
+
+.op-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.op-table td strong {
+  color: var(--op-ink);
+}
+
+.op-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.op-dashboard .op-table th:first-child,
+.op-dashboard .op-table td:first-child {
+  width: 26%;
+}
+
+.op-candidates th:nth-child(1),
+.op-candidates td:nth-child(1) {
+  width: 12%;
+}
+
+.op-candidates th:nth-child(3),
+.op-candidates th:nth-child(4),
+.op-candidates th:nth-child(5) {
+  width: 12%;
+}
+
+.op-candidates th:nth-child(6),
+.op-candidates td:nth-child(6) {
+  width: 15%;
+}
+
+.op-cellname {
+  display: block;
+  font-weight: 600;
+  color: var(--op-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.op-cellsub {
+  display: block;
+  font-size: 0.86em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.op-dots {
+  display: inline-flex;
+  gap: 1mm;
+  vertical-align: middle;
+}
+
+.op-dots span {
+  width: 2.2mm;
+  height: 2.2mm;
+  border-radius: 50%;
+  background: var(--op-rule);
+}
+
+.op-dots span.on {
+  background: var(--op-teal);
+}
+
+/* ─── Conclusie en voet ─── */
+
+.op-conclusion {
+  padding: 2.4mm 3.6mm;
+  border-radius: 2mm;
+  background: var(--op-navy);
+  color: #fff;
+}
+
+.op-conclusion .op-label {
+  color: #7fdcec;
+  margin-bottom: 0.8mm;
+}
+
+.op-conclusion p {
+  font-size: 1.14em;
+  font-weight: 600;
+  line-height: 1.36;
+}
+
+.op-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 6mm;
+  padding-top: 1.6mm;
+  border-top: 1px solid var(--op-rule);
+  font-size: 0.76em;
+  color: var(--op-muted);
+}
+
+.op-footer-brand {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+/* ─── Kleine schermen: gestapeld en leesbaar (niet voor de vaste print-variant) ─── */
+
+@media screen and (max-width: 820px) {
+  .op-sheet:not(.op-sheet--fixed) {
+    width: 100%;
+    height: auto;
+    padding: 20px 16px;
+    font-size: 14px;
+    overflow: visible;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-inner {
+    overflow: visible;
+    gap: 14px;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-date {
+    align-items: flex-start;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-balance,
+  .op-sheet:not(.op-sheet--fixed) .op-grid2 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-metric-value {
+    font-size: 1.5em;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-case li,
+  .op-sheet:not(.op-sheet--fixed) .op-verdict {
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-footer {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-title {
+    font-size: 1.55em;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-ticker {
+    display: inline-block;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-paneltitle {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-aside {
+    text-align: left;
+    white-space: normal;
+  }
+
+  /* Tabellen: elke rij wordt een blokje met labels, geen krappe kolommen. */
+  .op-sheet:not(.op-sheet--fixed) .op-table,
+  .op-sheet:not(.op-sheet--fixed) .op-table tbody,
+  .op-sheet:not(.op-sheet--fixed) .op-table tr,
+  .op-sheet:not(.op-sheet--fixed) .op-table td {
+    display: block;
+    width: auto !important;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-table thead {
+    display: none;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-table tr {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--op-rule);
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-table tr:last-child {
+    border-bottom: 0;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-table td {
+    padding: 2px 0;
+    border: 0;
+    text-align: left;
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-table td[data-label]::before {
+    content: attr(data-label) ": ";
+    font-weight: 600;
+    color: var(--op-muted);
+  }
+
+  .op-sheet:not(.op-sheet--fixed) .op-cellname,
+  .op-sheet:not(.op-sheet--fixed) .op-cellsub {
+    white-space: normal;
+  }
+}
