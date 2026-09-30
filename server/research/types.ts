@@ -115,6 +115,8 @@ export interface Report extends ReportSummary {
 export type PhaseEvent =
   | { t: "start"; phase: PhaseName }
   | { t: "ping" }
+  /** Het model is begonnen met antwoorden; de cache van deze stap is nu leesbaar. */
+  | { t: "streaming" }
   | { t: "search"; query: string }
   | { t: "fetch"; url: string }
   | { t: "thinking"; d: string }

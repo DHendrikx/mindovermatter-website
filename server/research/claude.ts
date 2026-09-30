@@ -9,7 +9,11 @@
  *   dan draait de API het op een aanbevolen ander model.
  */
 import Anthropic from "@anthropic-ai/sdk";
-import type { BetaContentBlock, BetaMessageParam } from "@anthropic-ai/sdk/resources/beta/messages/messages";
+import type {
+  BetaContentBlock,
+  BetaContentBlockParam,
+  BetaMessageParam,
+} from "@anthropic-ai/sdk/resources/beta/messages/messages";
 import { emptyUsage, priceUsage } from "./cost.js";
 import type { PhaseEvent, PhaseUsage, Source } from "./types.js";
 
@@ -38,7 +42,8 @@ export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
 
 export interface StageOptions {
   system: string;
-  user: string;
+  /** Tekst, of losse blokken (met cachepunten) zoals phases.ts ze opbouwt. */
+  user: string | BetaContentBlockParam[];
   effort: Effort;
   maxTokens: number;
   webSearches?: number;
@@ -134,6 +139,8 @@ export async function runStage(options: StageOptions): Promise<StageResult> {
 
     stream.on("text", (delta) => options.emit({ t: "text", d: delta }));
     stream.on("streamEvent", (event) => {
+      // Vanaf het eerste streamevent is de cache van dit verzoek leesbaar voor andere stappen.
+      if (event.type === "message_start" && turn === 0) options.emit({ t: "streaming" });
       if (event.type === "content_block_delta" && event.delta.type === "thinking_delta") {
         options.emit({ t: "thinking", d: event.delta.thinking });
       }

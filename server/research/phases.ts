@@ -4,6 +4,7 @@
  * gedeelde methodiek.
  */
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
+import type { BetaTextBlockParam } from "@anthropic-ai/sdk/resources/beta/messages/messages";
 import { MODEL, runStage, StageError, type Effort } from "./claude.js";
 import { METHODOLOGY } from "./prompt.js";
 import { ClassificationSchema, OnePagerSchema, type Classification } from "./schema.js";
@@ -193,12 +194,24 @@ function languageInstruction(language: Language): string {
     : "Write everything in English.";
 }
 
-function header(meta: ReportMeta, phase: PhaseName): string {
-  const today = new Date().toISOString().slice(0, 10);
-  const index = Object.keys(STAGE_TITLES).indexOf(phase) + 1;
+/*
+ * Opbouw van het gebruikersbericht, ingericht op prompt caching.
+ *
+ * Volgorde: (1) rapportcontext, per rapport steeds byte-identiek; (2) de
+ * uitkomsten van eerdere stappen, altijd in dezelfde vaste volgorde; (3) pas
+ * als laatste de stap-specifieke opdracht. Stappen met dezelfde tools en
+ * denkstand delen zo een identiek voorvoegsel en lezen dat uit de cache in
+ * plaats van het opnieuw te betalen (bull en bear delen het dossier;
+ * de one-pager leest alles tot en met de onafhankelijke analist mee van de
+ * synthese). Het cachepunt staat op het laatste blok met eerdere uitkomsten.
+ *
+ * Let op: niets dynamisch (datum van vandaag, stapnummer, ids) vóór dat
+ * cachepunt zetten. De datum komt daarom uit meta.createdAt.
+ */
+function contextBlock(meta: ReportMeta): string {
   return [
-    `STAGE ${index} of 7 — ${STAGE_TITLES[phase]}`,
-    `TODAY: ${today}`,
+    "REPORT CONTEXT",
+    `TODAY: ${meta.createdAt.slice(0, 10)}`,
     `INPUT: ${meta.input}`,
     `CLASSIFIED AS: ${meta.kind} — ${meta.displayName}${meta.ticker ? ` (${meta.ticker})` : ""}`,
     `OPTIONAL USER THESIS / CONTEXT: ${meta.context.trim() || "none"}`,
@@ -206,14 +219,33 @@ function header(meta: ReportMeta, phase: PhaseName): string {
   ].join("\n");
 }
 
-function priorOutputs(report: Report, uses: PhaseName[]): string {
-  if (!uses.length) return "";
-  const parts = uses.map((phase) => {
-    const result = report.phases[phase];
-    if (!result?.markdown) throw new StageError(`De stap "${PHASE_CONFIG[phase].label}" is nog niet klaar.`);
-    return `<stage name="${phase}">\n${result.markdown}\n</stage>`;
-  });
-  return `\n\nOUTPUT OF EARLIER STAGES (treat as the evidence base; do not repeat it verbatim):\n\n${parts.join("\n\n")}`;
+const PRIOR_INTRO =
+  "OUTPUT OF EARLIER STAGES (treat as the evidence base; do not repeat it verbatim). The task for this stage follows after them.";
+
+function instructionsBlock(meta: ReportMeta, phase: PhaseName): string {
+  const index = PHASES_IN_ORDER.indexOf(phase) + 1;
+  return `STAGE ${index} of 7 — ${STAGE_TITLES[phase]}\n\nTASK:\n${PHASE_CONFIG[phase].instructions(meta)}`;
+}
+
+const PHASES_IN_ORDER = Object.keys(STAGE_TITLES) as PhaseName[];
+
+export function buildUserContent(report: Report, phase: PhaseName): BetaTextBlockParam[] {
+  const uses = PHASE_CONFIG[phase].uses;
+  const blocks: BetaTextBlockParam[] = [{ type: "text", text: contextBlock(report.meta) }];
+
+  if (uses.length) {
+    blocks.push({ type: "text", text: PRIOR_INTRO });
+    // `uses` staat in de vaste volgorde dossier, bull, bear, valuation, committee, synthesis.
+    for (const prior of uses) {
+      const result = report.phases[prior];
+      if (!result?.markdown) throw new StageError(`De stap "${PHASE_CONFIG[prior].label}" is nog niet klaar.`);
+      blocks.push({ type: "text", text: `<stage name="${prior}">\n${result.markdown}\n</stage>` });
+    }
+    blocks[blocks.length - 1] = { ...blocks[blocks.length - 1], cache_control: { type: "ephemeral" } };
+  }
+
+  blocks.push({ type: "text", text: instructionsBlock(report.meta, phase) });
+  return blocks;
 }
 
 export async function executePhase(
@@ -224,7 +256,7 @@ export async function executePhase(
 ): Promise<PhaseResult> {
   const config = PHASE_CONFIG[phase];
   const started = Date.now();
-  const user = `${header(report.meta, phase)}\n\nTASK:\n${config.instructions(report.meta)}${priorOutputs(report, config.uses)}`;
+  const user = buildUserContent(report, phase);
 
   const result = await runStage({
     system: METHODOLOGY,

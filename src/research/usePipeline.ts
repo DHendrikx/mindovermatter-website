@@ -20,6 +20,10 @@ export interface LiveState {
 }
 
 const RUNNING_STALE_MS = 330_000;
+/** Maximaal zo lang wacht een volger op zijn "leider" voordat hij toch start. */
+const LEADER_WAIT_MS = 45_000;
+/** Stappen met een identiek voorvoegsel (zelfde tools, denkstand en eerdere uitkomsten). */
+const CACHE_LEADER: Partial<Record<PhaseName, PhaseName>> = { bear: "bull" };
 const POLL_MS = 6_000;
 const TAIL_CHARS = 5_000;
 
@@ -122,8 +126,36 @@ export function usePipeline(id: string) {
             break;
           }
 
+          // Een stap die hetzelfde voorvoegsel heeft als een andere (bear en bull delen
+          // tools, denkstand en dossier) start pas als die andere begint te streamen:
+          // dan leest hij het dossier uit de cache in plaats van het opnieuw te betalen.
+          const started = new Map<PhaseName, Promise<void>>();
+          const markStarted = new Map<PhaseName, () => void>();
+          for (const phase of ready) {
+            started.set(
+              phase,
+              new Promise<void>((resolve) => {
+                markStarted.set(phase, resolve);
+                setTimeout(resolve, LEADER_WAIT_MS);
+              }),
+            );
+          }
           const outcomes = await Promise.all(
-            ready.map((phase) => runPhase(id, phase, (event) => onEvent(phase, event), abort.current?.signal)),
+            ready.map(async (phase) => {
+              const leader = CACHE_LEADER[phase];
+              if (leader && started.has(leader)) await started.get(leader);
+              const outcome = await runPhase(
+                id,
+                phase,
+                (event) => {
+                  if (event.t === "streaming" || event.t === "error") markStarted.get(phase)?.();
+                  onEvent(phase, event);
+                },
+                abort.current?.signal,
+              );
+              markStarted.get(phase)?.();
+              return outcome;
+            }),
           );
           if (abort.current?.signal.aborted) break;
           if (outcomes.includes("error")) {
