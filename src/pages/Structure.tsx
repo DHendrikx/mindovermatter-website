@@ -53,8 +53,8 @@ const NL = {
   step: "Stap",
   onboarding: [
     { title: "Aanmelding", desc: "Eerste inventarisatie en start van het traject." },
+    { title: "Verificatie", desc: "Administrateur toetst het inschrijfformulier en de compliancevereisten." },
     { title: "Agreement", desc: "Ontvangst en zorgvuldige beoordeling van de overeenkomst." },
-    { title: "Verificatie", desc: "Administrateur toetst inschrijving en compliancevereisten." },
     { title: "Overboeking", desc: "Na bevestiging volgt de instructie voor overmaking." },
     { title: "Uitgifte", desc: "Inschrijving wordt omgezet in aandelen in het fonds." },
   ],
@@ -127,8 +127,8 @@ const EN: typeof NL = {
   step: "Step",
   onboarding: [
     { title: "Application", desc: "Initial assessment and start of the process." },
+    { title: "Verification", desc: "The administrator checks the application form and the compliance requirements." },
     { title: "Agreement", desc: "Receipt and careful review of the agreement." },
-    { title: "Verification", desc: "The administrator checks the subscription and compliance requirements." },
     { title: "Transfer", desc: "Once confirmed, the instructions for the transfer follow." },
     { title: "Issue", desc: "The subscription is converted into shares in the fund." },
   ],
