@@ -14,7 +14,11 @@ een domein zonder `.fund`-extensie.
   via `/documents/*.pdf`, zoals voorheen.
 - **E-mail**: overal `contact@mindovermatter.limited`.
 - **Metadata**: `index.html` heeft de oorspronkelijke beschrijving, met
-  canonical en og-tags op `https://mindovermatter.limited/`.
+  canonical-, hreflang- en og-tags op `https://www.mindovermatter.limited/`.
+  Dat is het primaire domein in Vercel; het adres zonder www en
+  `mindovermatter.fund` sturen daar met een 308 naartoe. Wordt het primaire
+  domein ooit omgezet, pas dan ook `SITE_URL` in `src/components/Layout.tsx`
+  en de tags in `index.html` aan.
 
 ## Wat er buiten de code nog moet gebeuren
 

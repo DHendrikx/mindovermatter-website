@@ -9,7 +9,7 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PAGES, counterpartPath, langFromPath, pageFromPath, useLang, usePath, type Lang, type PageKey } from "@/i18n";
 
-const SITE_URL = "https://mindovermatter.limited";
+const SITE_URL = "https://www.mindovermatter.limited";
 
 const NAV_ITEMS: { page: PageKey; label: Record<Lang, string> }[] = [
   { page: "home", label: { nl: "Home", en: "Home" } },
