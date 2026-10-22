@@ -1,31 +1,20 @@
 # Migratie mindovermatter.fund → mindovermatter.limited
 
 Aanleiding: brokers lazen de uitingen op de site als die van een beleggingsfonds,
-terwijl Mind over Matter technisch geen fonds is. De site staat daarom tijdelijk
-in "stille" modus en verhuist naar een domein zonder `.fund`-extensie.
+terwijl Mind over Matter technisch geen fonds is. De site verhuist daarom naar
+een domein zonder `.fund`-extensie.
 
 ## Wat er in de code is gebeurd
 
-- **Stille homepage**: `src/pages/Holding.tsx` — één scherm in huisstijl met
-  logo, drie principes, contactadres en een regel dat de site geen aanbod of
-  uitnodiging bevat. Geen navigatie, geen rendement, geen structuur.
-- **Volledige site geparkeerd**: alles staat in `src/site-full/`. Die map wordt
-  nergens geïmporteerd en zit daardoor niet in de gebouwde bundel — de teksten
-  zijn niet op te vragen door bezoekers. Zie `src/site-full/README.md`.
-- **Oude URL's**: `/filosofie`, `/team`, `/structuur`, `/documentatie`,
-  `/contact`, `/disclaimer` en `/fondsbeheerder` sturen door naar `/`.
-- **PDF's offline**: `public/documents/` → `assets-private/documents/`. Deze
-  stonden publiek op `/documents/*.pdf` en waren rechtstreeks op te vragen —
-  ook zonder link vanaf de site. Het gaat om het Information Memorandum (NL/EN),
-  de Investor Application en het pitchdeck.
+- **Volledige site terug**: de tijdelijke holding page is weer weg. Alle pagina's
+  staan weer in `src/pages/` en `src/components/`, gelijk aan de versie die op
+  mindovermatter.fund live stond. De teksten zijn nog niet nagelopen op
+  fondsterminologie (zie punt 7 hieronder).
+- **PDF's**: staan weer in `public/documents/` en zijn dus publiek op te vragen
+  via `/documents/*.pdf`, zoals voorheen.
 - **E-mail**: overal `contact@mindovermatter.limited`.
-- **Metadata**: `index.html` heeft een neutrale beschrijving, canonical en
-  og-tags op `https://mindovermatter.limited/`.
-- **Geen animatie op de holding page**: de rest van de site fade't tekst in met
-  framer-motion, waardoor de inhoud op `opacity: 0` staat tot JavaScript de
-  animatie draait. Voor een pagina die het in linkpreviews en screenshots altijd
-  moet doen is dat een onnodig risico, dus deze pagina is statisch. Daarmee is
-  framer-motion volledig uit de bundel: 328 kB → 204 kB (gzip 106 → 65 kB).
+- **Metadata**: `index.html` heeft de oorspronkelijke beschrijving, met
+  canonical en og-tags op `https://mindovermatter.limited/`.
 
 ## Wat er buiten de code nog moet gebeuren
 
