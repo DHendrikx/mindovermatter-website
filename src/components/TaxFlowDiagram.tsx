@@ -5,6 +5,83 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useLang } from "@/i18n";
+
+const NL = {
+  locale: "nl-NL",
+  title: "Geldstroomvergelijking",
+  bvBadge: "Reguliere Nederlandse BV",
+  investor: "Investeerder",
+  contribution: "Inleg kapitaal",
+  deposit: "Inleg",
+  bv: "BV (Nederland)",
+  bvInvests: "Belegt in aandelen",
+  profitRealised: "Winst gerealiseerd",
+  taxOffice: "Belastingdienst",
+  taxPerTrade: "Vpb ~25,8% per transactie",
+  remainingProfit: "Resterende winst",
+  reinvestedBv: "Herbelegd kapitaal",
+  reinvestedBvSub: "Kleiner na elke transactie",
+  bvCallout: <>Belasting wordt <strong>direct</strong> ingehouden na elke winstgevende transactie</>,
+  momFund: "MoM Fonds (IoM)",
+  momFundSub: "0% winstbelasting",
+  fullProfit: "Volledige winst herbelegd",
+  reinvestedMom: "Geherinvesteerd kapitaal",
+  reinvestedMomSub: "100% van de winst blijft actief",
+  distribution: "Uitkering / exit",
+  taxOnDistribution: "Belasting bij uitkering",
+  taxOnDistributionSub: "Pas dan fiscale afrekening",
+  momCallout: <>Belasting wordt <strong>uitgesteld</strong> — compound effect werkt over 100% van het kapitaal</>,
+  exampleTitle: "Rekenvoorbeeld — 10 jaar, 10% rendement p.j., €100.000 inleg",
+  exampleNote: "Illustratief. Belastingdruk gebaseerd op Vpb-tarief ~25,8%. Persoonlijke fiscale situatie kan afwijken.",
+  barBv: "Nederlandse BV",
+  barBvSub: "Vpb per transactie",
+  barMomNetSub: "Na belasting bij uitkering",
+  barMomGrossSub: "Bruto fondswaarde vóór uitkering",
+  deltaNet: "Verschil na 10 jaar (netto)",
+  deltaNetSub: "MoM netto vs. NL BV",
+  deltaGross: "Bruto fondswaarde voordeel",
+  deltaGrossSub: "Vóór fiscale afrekening bij uitkering",
+};
+
+const EN: typeof NL = {
+  locale: "en-GB",
+  title: "Cash flow comparison",
+  bvBadge: "Regular Dutch BV",
+  investor: "Investor",
+  contribution: "Capital contribution",
+  deposit: "Contribution",
+  bv: "BV (Netherlands)",
+  bvInvests: "Invests in shares",
+  profitRealised: "Profit realised",
+  taxOffice: "Dutch Tax Administration",
+  taxPerTrade: "Vpb ~25.8% per transaction",
+  remainingProfit: "Remaining profit",
+  reinvestedBv: "Reinvested capital",
+  reinvestedBvSub: "Smaller after every trade",
+  bvCallout: <>Tax is withheld <strong>immediately</strong> after every profitable trade</>,
+  momFund: "MoM Fund (IoM)",
+  momFundSub: "0% tax on profits",
+  fullProfit: "Full profit reinvested",
+  reinvestedMom: "Reinvested capital",
+  reinvestedMomSub: "100% of the profit stays invested",
+  distribution: "Distribution / exit",
+  taxOnDistribution: "Tax on distribution",
+  taxOnDistributionSub: "Only then is tax settled",
+  momCallout: <>Tax is <strong>deferred</strong> — compounding works on 100% of the capital</>,
+  exampleTitle: "Worked example — 10 years, 10% return p.a., €100,000 invested",
+  exampleNote: "Illustrative. Tax burden based on a Vpb (Dutch corporate income tax) rate of ~25.8%. Personal tax circumstances may differ.",
+  barBv: "Dutch BV",
+  barBvSub: "Vpb per transaction",
+  barMomNetSub: "After tax on distribution",
+  barMomGrossSub: "Gross fund value before distribution",
+  deltaNet: "Difference after 10 years (net)",
+  deltaNetSub: "MoM net vs. Dutch BV",
+  deltaGross: "Gross fund value advantage",
+  deltaGrossSub: "Before tax settlement on distribution",
+};
+
+const COPY = { nl: NL, en: EN };
 
 // ─── Animated counter hook ───────────────────────────────────────────────────
 function useCountUp(target: number, duration = 1400, start = false, skip = false) {
@@ -33,6 +110,7 @@ function ComparisonBar({
   color,
   animate,
   reducedMotion,
+  locale,
 }: {
   label: string;
   sublabel: string;
@@ -41,6 +119,7 @@ function ComparisonBar({
   color: string;
   animate: boolean;
   reducedMotion: boolean;
+  locale: string;
 }) {
   const pct = animate ? (value / max) * 100 : 0;
   const displayed = useCountUp(value, 1200, animate, reducedMotion);
@@ -53,7 +132,7 @@ function ComparisonBar({
           <span className="text-xs text-muted-foreground ml-2">{sublabel}</span>
         </div>
         <span className="text-lg font-bold" style={{ color }}>
-          €{displayed.toLocaleString("nl-NL")}
+          €{displayed.toLocaleString(locale)}
         </span>
       </div>
       <div className="h-3 rounded-full bg-[oklch(0.20_0.02_250)] overflow-hidden">
@@ -120,6 +199,7 @@ function Arrow({ label, color = "oklch(0.82 0.17 195)", dashed = false }: { labe
 
 // ─── Main component ──────────────────────────────────────────────────────────
 export default function TaxFlowDiagram() {
+  const t = COPY[useLang()];
   const ref = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
   const [visible, setVisible] = useState(reducedMotion);
@@ -169,7 +249,7 @@ export default function TaxFlowDiagram() {
       {/* ── Section 1: Flow diagram ── */}
       <div>
         <h3 className="text-sm font-semibold text-[oklch(0.82_0.17_195)] uppercase tracking-wider mb-8 text-center">
-          Geldstroomvergelijking
+          {t.title}
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -183,20 +263,20 @@ export default function TaxFlowDiagram() {
           >
             <div className="text-center mb-6">
               <span className="text-xs font-semibold uppercase tracking-wider text-[oklch(0.55_0.01_250)] px-3 py-1 rounded-full border border-[oklch(0.28_0.02_250)]">
-                Reguliere Nederlandse BV
+                {t.bvBadge}
               </span>
             </div>
 
-            <FlowNode title="Investeerder" subtitle="Inleg kapitaal" />
-            <Arrow label="Inleg" />
-            <FlowNode title="BV (Nederland)" subtitle="Belegt in aandelen" />
-            <Arrow label="Winst gerealiseerd" color="oklch(0.75 0.15 30)" />
-            <FlowNode title="Belastingdienst" subtitle="Vpb ~25,8% per transactie" muted />
-            <Arrow label="Resterende winst" color="oklch(0.75 0.15 30)" dashed />
-            <FlowNode title="Herbelegd kapitaal" subtitle="Kleiner na elke transactie" />
+            <FlowNode title={t.investor} subtitle={t.contribution} />
+            <Arrow label={t.deposit} />
+            <FlowNode title={t.bv} subtitle={t.bvInvests} />
+            <Arrow label={t.profitRealised} color="oklch(0.75 0.15 30)" />
+            <FlowNode title={t.taxOffice} subtitle={t.taxPerTrade} muted />
+            <Arrow label={t.remainingProfit} color="oklch(0.75 0.15 30)" dashed />
+            <FlowNode title={t.reinvestedBv} subtitle={t.reinvestedBvSub} />
             <div className="mt-4 rounded-lg bg-[oklch(0.75_0.15_30_/_8%)] border border-[oklch(0.75_0.15_30_/_20%)] p-3 text-center">
               <p className="text-xs text-[oklch(0.75_0.15_30)]">
-                Belasting wordt <strong>direct</strong> ingehouden na elke winstgevende transactie
+                {t.bvCallout}
               </p>
             </div>
           </div>
@@ -214,16 +294,16 @@ export default function TaxFlowDiagram() {
               </span>
             </div>
 
-            <FlowNode title="Investeerder" subtitle="Inleg kapitaal" />
-            <Arrow label="Inleg" />
-            <FlowNode title="MoM Fonds (IoM)" subtitle="0% winstbelasting" accent />
-            <Arrow label="Volledige winst herbelegd" />
-            <FlowNode title="Geherinvesteerd kapitaal" subtitle="100% van de winst blijft actief" accent />
-            <Arrow label="Uitkering / exit" />
-            <FlowNode title="Belasting bij uitkering" subtitle="Pas dan fiscale afrekening" />
+            <FlowNode title={t.investor} subtitle={t.contribution} />
+            <Arrow label={t.deposit} />
+            <FlowNode title={t.momFund} subtitle={t.momFundSub} accent />
+            <Arrow label={t.fullProfit} />
+            <FlowNode title={t.reinvestedMom} subtitle={t.reinvestedMomSub} accent />
+            <Arrow label={t.distribution} />
+            <FlowNode title={t.taxOnDistribution} subtitle={t.taxOnDistributionSub} />
             <div className="mt-4 rounded-lg bg-[oklch(0.82_0.17_195_/_6%)] border border-[oklch(0.82_0.17_195_/_20%)] p-3 text-center">
               <p className="text-xs text-[oklch(0.82_0.17_195)]">
-                Belasting wordt <strong>uitgesteld</strong> — compound effect werkt over 100% van het kapitaal
+                {t.momCallout}
               </p>
             </div>
           </div>
@@ -238,39 +318,42 @@ export default function TaxFlowDiagram() {
         style={{ transitionDelay: reducedMotion ? undefined : "300ms" }}
       >
         <h3 className="text-sm font-semibold text-[oklch(0.82_0.17_195)] uppercase tracking-wider mb-2">
-          Rekenvoorbeeld — 10 jaar, 10% rendement p.j., €100.000 inleg
+          {t.exampleTitle}
         </h3>
         <p className="text-xs text-muted-foreground mb-8">
-          Illustratief. Belastingdruk gebaseerd op Vpb-tarief ~25,8%. Persoonlijke fiscale situatie kan afwijken.
+          {t.exampleNote}
         </p>
 
         <div className="space-y-6">
           <ComparisonBar
-            label="Nederlandse BV"
-            sublabel="Vpb per transactie"
+            label={t.barBv}
+            sublabel={t.barBvSub}
             value={nlBvRounded}
             max={maxVal}
             color="oklch(0.65 0.12 30)"
             animate={revealed}
             reducedMotion={reducedMotion}
+            locale={t.locale}
           />
           <ComparisonBar
             label="Mind over Matter (IoM)"
-            sublabel="Na belasting bij uitkering"
+            sublabel={t.barMomNetSub}
             value={momNetRounded}
             max={maxVal}
             color="oklch(0.75 0.15 195)"
             animate={revealed}
             reducedMotion={reducedMotion}
+            locale={t.locale}
           />
           <ComparisonBar
             label="Mind over Matter (IoM)"
-            sublabel="Bruto fondswaarde vóór uitkering"
+            sublabel={t.barMomGrossSub}
             value={momGrossRounded}
             max={maxVal}
             color="oklch(0.82 0.17 195)"
             animate={revealed}
             reducedMotion={reducedMotion}
+            locale={t.locale}
           />
         </div>
 
@@ -282,18 +365,18 @@ export default function TaxFlowDiagram() {
           style={{ transitionDelay: reducedMotion ? undefined : "800ms" }}
         >
           <div className="flex-1 rounded-xl bg-[oklch(0.82_0.17_195_/_6%)] border border-[oklch(0.82_0.17_195_/_20%)] p-4 text-center">
-            <p className="text-xs text-muted-foreground mb-1">Verschil na 10 jaar (netto)</p>
+            <p className="text-xs text-muted-foreground mb-1">{t.deltaNet}</p>
             <p className="text-2xl font-extrabold text-[oklch(0.82_0.17_195)]">
-              +€{(momNetRounded - nlBvRounded).toLocaleString("nl-NL")}
+              +€{(momNetRounded - nlBvRounded).toLocaleString(t.locale)}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">MoM netto vs. NL BV</p>
+            <p className="text-xs text-muted-foreground mt-1">{t.deltaNetSub}</p>
           </div>
           <div className="flex-1 rounded-xl bg-[oklch(0.82_0.17_195_/_4%)] border border-[oklch(0.82_0.17_195_/_12%)] p-4 text-center">
-            <p className="text-xs text-muted-foreground mb-1">Bruto fondswaarde voordeel</p>
+            <p className="text-xs text-muted-foreground mb-1">{t.deltaGross}</p>
             <p className="text-2xl font-extrabold text-foreground">
-              +€{(momGrossRounded - nlBvRounded).toLocaleString("nl-NL")}
+              +€{(momGrossRounded - nlBvRounded).toLocaleString(t.locale)}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">Vóór fiscale afrekening bij uitkering</p>
+            <p className="text-xs text-muted-foreground mt-1">{t.deltaGrossSub}</p>
           </div>
         </div>
       </div>

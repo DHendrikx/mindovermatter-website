@@ -1,5 +1,11 @@
 import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Component, type ReactNode } from "react";
+import { langFromPath } from "@/i18n";
+
+const COPY = {
+  nl: { message: "Er is een onverwachte fout opgetreden.", reload: "Pagina opnieuw laden" },
+  en: { message: "An unexpected error has occurred.", reload: "Reload page" },
+};
 
 interface Props {
   children: ReactNode;
@@ -22,12 +28,14 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      // Staat buiten de router, dus de taal komt direct uit de URL
+      const t = COPY[langFromPath(window.location.pathname)];
       return (
         <div className="flex items-center justify-center min-h-screen p-8 bg-background">
           <div className="flex flex-col items-center w-full max-w-2xl p-8">
             <AlertTriangle size={48} className="text-destructive mb-6 flex-shrink-0" />
 
-            <h2 className="text-xl mb-4 text-foreground">Er is een onverwachte fout opgetreden.</h2>
+            <h2 className="text-xl mb-4 text-foreground">{t.message}</h2>
 
             {import.meta.env.DEV && (
               <div className="p-4 w-full rounded bg-muted overflow-auto mb-6">
@@ -42,7 +50,7 @@ class ErrorBoundary extends Component<Props, State> {
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90"
             >
               <RotateCcw size={16} />
-              Pagina opnieuw laden
+              {t.reload}
             </button>
           </div>
         </div>

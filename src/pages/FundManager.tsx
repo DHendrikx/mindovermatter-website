@@ -5,47 +5,146 @@
 import { FadeIn, CyanLine } from "@/components/AnimatedSection";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
+import { useLang, usePath } from "@/i18n";
 
 const TEAM_MEMBERS = [
-  {
-    name: "Dolf Hendrikx",
-    role: "Strategie & Ondernemerschap",
-    photo: "/images/team-dolf-hendrikx.webp",
-    bio: "Dolf is een gedreven serial entrepreneur met een bewezen staat van dienst in het opzetten en succesvol verkopen van ondernemingen. Zijn ervaring spreidt zich uit over uiteenlopende sectoren, van techniek en productie tot de educatieve reisindustrie. Door zijn werk met zowel startups als corporates beschikt hij over diepgaand inzicht in bedrijfswaarderingen, kapitaalstructuren en de operationele realiteit achter de cijfers.",
-    detail: "Naast zijn ondernemerschap heeft Dolf jarenlange ervaring met het beheren van substantiële vermogens en het maken van strategische beslissingen onder druk.",
-    strengths: [
-      "Bedrijfswaarderingen & kapitaalstructuren",
-      "Strategische besluitvorming onder druk",
-      "Operationeel inzicht achter de cijfers",
-    ],
+  { id: "dolf", name: "Dolf Hendrikx", photo: "/images/team-dolf-hendrikx.webp" },
+  { id: "sjors", name: "Sjors Tromp", photo: "/images/team-sjors-tromp.png" },
+  { id: "roy", name: "Roy Huts", photo: "/images/team-roy-huts.png" },
+] as const;
+
+const NL = {
+  heroEyebrow: "Wie het kapitaal beheert",
+  heroTitle: "Het Team",
+  heroText: "Het fonds wordt beheerd op Isle of Man door een team van beleggingsmanagers. Wij combineren value investing met diepgaande analytische discipline.",
+  quote: "\"Onze kracht is het zien van mogelijkheden waar anderen onzekerheid zien — discipline, analyse en emotionele controle vormen de bouwstenen voor lange termijn succes.\"",
+  competencies: "Kerncompetenties",
+  profiles: {
+    dolf: {
+      role: "Strategie & Ondernemerschap",
+      bio: "Dolf is een gedreven serial entrepreneur met een bewezen staat van dienst in het opzetten en succesvol verkopen van ondernemingen. Zijn ervaring spreidt zich uit over uiteenlopende sectoren, van techniek en productie tot de educatieve reisindustrie. Door zijn werk met zowel startups als corporates beschikt hij over diepgaand inzicht in bedrijfswaarderingen, kapitaalstructuren en de operationele realiteit achter de cijfers.",
+      detail: "Naast zijn ondernemerschap heeft Dolf jarenlange ervaring met het beheren van substantiële vermogens en het maken van strategische beslissingen onder druk.",
+      strengths: [
+        "Bedrijfswaarderingen & kapitaalstructuren",
+        "Strategische besluitvorming onder druk",
+        "Operationeel inzicht achter de cijfers",
+      ],
+    },
+    sjors: {
+      role: "Operations & Compliance",
+      bio: "Sjors, opererend vanuit Isle of Man, brengt specialistische expertise mee op het snijvlak van productontwikkeling en regelgeving. Als Principal Product Manager bij PokerStars is hij verantwoordelijk voor zowel de complexe game logic als de hardware- en softwarematige ondersteuning van grootschalige live events.",
+      detail: "Zijn ervaring in deze zwaar gereguleerde internationale industrie maakt hem een expert in het vertalen van complexe compliance-eisen naar efficiënte operationele processen. Zijn achtergrond in de pokerwereld heeft zijn begrip van speltheorie en strategisch risicomanagement verder aangescherpt.",
+      strengths: [
+        "Compliance & regelgeving in gereguleerde industrie",
+        "Operationele procesoptimalisatie",
+        "Speltheorie & strategisch risicomanagement",
+      ],
+    },
+    roy: {
+      role: "Analyse & Risicobeheersing",
+      bio: "Roy is de analytische spil van het team en is gespecialiseerd in het structureren van data tot bruikbare inzichten. Naast zijn jarenlange ervaring in de pokerwereld, waar hij zich bekwaamde in probabilistisch denken, fungeert hij als vervangend voorzitter van de Ondernemingsraad bij een grote overheidsorganisatie.",
+      detail: "In deze rol is hij gewend om complexe belangen te wegen en rationele besluiten te nemen binnen een bestuurlijke context. Roy heeft een ongekende focus op 'min-maxing': het proces van het minimaliseren van risico's en het maximaliseren van resultaat door constante kritische evaluatie.",
+      strengths: [
+        "Data-analyse & probabilistisch denken",
+        "Risicominimalisatie & resultaatmaximalisatie",
+        "Bestuurlijke besluitvorming",
+      ],
+    },
   },
-  {
-    name: "Sjors Tromp",
-    role: "Operations & Compliance",
-    photo: "/images/team-sjors-tromp.png",
-    bio: "Sjors, opererend vanuit Isle of Man, brengt specialistische expertise mee op het snijvlak van productontwikkeling en regelgeving. Als Principal Product Manager bij PokerStars is hij verantwoordelijk voor zowel de complexe game logic als de hardware- en softwarematige ondersteuning van grootschalige live events.",
-    detail: "Zijn ervaring in deze zwaar gereguleerde internationale industrie maakt hem een expert in het vertalen van complexe compliance-eisen naar efficiënte operationele processen. Zijn achtergrond in de pokerwereld heeft zijn begrip van speltheorie en strategisch risicomanagement verder aangescherpt.",
-    strengths: [
-      "Compliance & regelgeving in gereguleerde industrie",
-      "Operationele procesoptimalisatie",
-      "Speltheorie & strategisch risicomanagement",
-    ],
+  sharedTitle: "Gezamenlijke basis",
+  sharedText: "Onze gezamenlijke basis werd gelegd in de strategische wereld van professioneel poker, waar we complexe systemen ons meester maakten. In tegenstelling tot wat de meeste mensen geloven, gaat poker niet over geluk. Op de korte termijn kan geluk resultaten beïnvloeden, maar op de lange termijn worden resultaten behaald door logisch denken en het afwegen van momenten van risico en beloning.",
+  sharedPoints: [
+    { title: "Probabilistisch denken", text: "Beslissingen nemen op basis van verwachte waarde, niet op basis van emotie of intuïtie." },
+    { title: "Emotionele discipline", text: "Consistent presteren onder druk, ongeacht of de omstandigheden mee- of tegenzitten." },
+    { title: "Risico-beloning analyse", text: "Elke beslissing wordt gewogen op basis van de verhouding tussen potentieel verlies en potentiële winst." },
+  ],
+  fitTitle: "Dit moet bij u passen",
+  fitText: "Niet iedereen hoeft in te stappen. Juist duidelijkheid over geschiktheid versterkt vertrouwen en samenwerking op de lange termijn.",
+  fitGood: "Passend",
+  fitGoodPoints: [
+    { title: "Kapitaalbehoud telt mee", text: "Voor beleggers die streven naar gecontroleerde groei en een weloverwogen risico." },
+    { title: "Rust en uitleg zijn belangrijk", text: "Voor families en ondernemers die discipline, inzicht en toelichting waarderen." },
+    { title: "Lange horizon", text: "Voor investeerders die begrijpen dat geduld vaak sterker is dan voortdurende rotatie." },
+  ],
+  fitLess: "Minder passend",
+  fitLessPoints: [
+    { title: "Korte-termijn focus", text: "Minder geschikt voor beleggers die snelle omloopsnelheid of continue activiteit zoeken." },
+    { title: "Maximaal rendement als enige maatstaf", text: "Minder passend wanneer winstmaximalisatie belangrijker is dan een gezonde bescherming van uw vermogen." },
+    { title: "Puur transactiegericht", text: "Minder passend voor wie enkel een snelle transactie zoekt en geen behoefte heeft aan persoonlijke toelichting of een langdurige relatie." },
+  ],
+  fitClosing: "De relatie moet kloppen: een goede match is voor ons belangrijker dan een snelle start. Wij bouwen liever aan een duurzaam fundament dan aan een overhaaste eerste stap.",
+  cta: "Neem contact op voor een kennismaking",
+};
+
+const EN: typeof NL = {
+  heroEyebrow: "Who manages the capital",
+  heroTitle: "The Team",
+  heroText: "The fund is managed on the Isle of Man by a team of investment managers. We combine value investing with deep analytical discipline.",
+  quote: "\"Our strength is seeing opportunities where others see uncertainty — discipline, analysis and emotional control are the building blocks of long-term success.\"",
+  competencies: "Core competencies",
+  profiles: {
+    dolf: {
+      role: "Strategy & Entrepreneurship",
+      bio: "Dolf is a driven serial entrepreneur with a proven track record of building and successfully selling companies. His experience spans a wide range of sectors, from engineering and manufacturing to the educational travel industry. Through his work with both start-ups and corporates, he has deep insight into company valuations, capital structures and the operational reality behind the numbers.",
+      detail: "Alongside his entrepreneurship, Dolf has many years of experience managing substantial assets and making strategic decisions under pressure.",
+      strengths: [
+        "Company valuations & capital structures",
+        "Strategic decision-making under pressure",
+        "Operational insight behind the numbers",
+      ],
+    },
+    sjors: {
+      role: "Operations & Compliance",
+      bio: "Sjors, based on the Isle of Man, brings specialist expertise at the intersection of product development and regulation. As Principal Product Manager at PokerStars, he is responsible for both complex game logic and the hardware and software support of large-scale live events.",
+      detail: "His experience in this heavily regulated international industry makes him an expert in translating complex compliance requirements into efficient operational processes. His background in the poker world has further sharpened his understanding of game theory and strategic risk management.",
+      strengths: [
+        "Compliance & regulation in a regulated industry",
+        "Operational process optimisation",
+        "Game theory & strategic risk management",
+      ],
+    },
+    roy: {
+      role: "Analysis & Risk Management",
+      bio: "Roy is the analytical linchpin of the team and specialises in structuring data into actionable insights. Alongside many years of experience in the poker world, where he honed his probabilistic thinking, he serves as vice-chair of the Works Council at a large government organisation.",
+      detail: "In this role he is used to weighing complex interests and making rational decisions in a governance context. Roy has an exceptional focus on 'min-maxing': the process of minimising risk and maximising results through constant critical evaluation.",
+      strengths: [
+        "Data analysis & probabilistic thinking",
+        "Risk minimisation & result maximisation",
+        "Governance decision-making",
+      ],
+    },
   },
-  {
-    name: "Roy Huts",
-    role: "Analyse & Risicobeheersing",
-    photo: "/images/team-roy-huts.png",
-    bio: "Roy is de analytische spil van het team en is gespecialiseerd in het structureren van data tot bruikbare inzichten. Naast zijn jarenlange ervaring in de pokerwereld, waar hij zich bekwaamde in probabilistisch denken, fungeert hij als vervangend voorzitter van de Ondernemingsraad bij een grote overheidsorganisatie.",
-    detail: "In deze rol is hij gewend om complexe belangen te wegen en rationele besluiten te nemen binnen een bestuurlijke context. Roy heeft een ongekende focus op 'min-maxing': het proces van het minimaliseren van risico's en het maximaliseren van resultaat door constante kritische evaluatie.",
-    strengths: [
-      "Data-analyse & probabilistisch denken",
-      "Risicominimalisatie & resultaatmaximalisatie",
-      "Bestuurlijke besluitvorming",
-    ],
-  },
-];
+  sharedTitle: "Common ground",
+  sharedText: "Our common ground was laid in the strategic world of professional poker, where we mastered complex systems. Contrary to what most people believe, poker is not about luck. In the short term luck can influence results, but in the long term results are achieved through logical thinking and weighing up moments of risk and reward.",
+  sharedPoints: [
+    { title: "Probabilistic thinking", text: "Making decisions based on expected value, not on emotion or intuition." },
+    { title: "Emotional discipline", text: "Performing consistently under pressure, whether conditions are favourable or not." },
+    { title: "Risk-reward analysis", text: "Every decision is weighed on the balance between potential loss and potential gain." },
+  ],
+  fitTitle: "This has to suit you",
+  fitText: "Not everyone needs to invest. Being clear about suitability is precisely what strengthens trust and long-term cooperation.",
+  fitGood: "A good fit",
+  fitGoodPoints: [
+    { title: "Capital preservation matters", text: "For investors who aim for controlled growth and well-considered risk." },
+    { title: "Calm and explanation are important", text: "For families and entrepreneurs who value discipline, insight and explanation." },
+    { title: "Long horizon", text: "For investors who understand that patience is often stronger than constant rotation." },
+  ],
+  fitLess: "Less of a fit",
+  fitLessPoints: [
+    { title: "Short-term focus", text: "Less suitable for investors looking for fast turnover or constant activity." },
+    { title: "Maximum return as the only yardstick", text: "Less of a fit when maximising profit matters more than sound protection of your assets." },
+    { title: "Purely transactional", text: "Less of a fit for those looking only for a quick transaction, with no need for personal explanation or a long-term relationship." },
+  ],
+  fitClosing: "The relationship has to be right: a good match matters more to us than a quick start. We would rather build a lasting foundation than take a hasty first step.",
+  cta: "Get in touch for an introduction",
+};
+
+const COPY = { nl: NL, en: EN };
 
 export default function FundManager() {
+  const t = COPY[useLang()];
+  const path = usePath();
+
   return (
     <div>
       {/* Hero */}
@@ -54,20 +153,20 @@ export default function FundManager() {
           <FadeIn>
             <CyanLine className="mb-6" />
             <p className="text-sm font-medium tracking-wider uppercase text-[oklch(0.82_0.17_195)] mb-3">
-              Wie het kapitaal beheert
+              {t.heroEyebrow}
             </p>
             <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
-              Het Team
+              {t.heroTitle}
             </h1>
             <p className="text-lg text-[oklch(0.70_0.01_250)] max-w-3xl mb-8">
-              Het fonds wordt beheerd op Isle of Man door een team van beleggingsmanagers. Wij combineren value investing met diepgaande analytische discipline.
+              {t.heroText}
             </p>
           </FadeIn>
 
           <FadeIn delay={0.15}>
             <blockquote className="border-l-2 border-[oklch(0.82_0.17_195)] pl-6 py-2 max-w-3xl">
               <p className="text-lg italic text-[oklch(0.75_0.01_250)] leading-relaxed">
-                "Onze kracht is het zien van mogelijkheden waar anderen onzekerheid zien — discipline, analyse en emotionele controle vormen de bouwstenen voor lange termijn succes."
+                {t.quote}
               </p>
             </blockquote>
           </FadeIn>
@@ -78,63 +177,66 @@ export default function FundManager() {
       <section className="section-bg-alt py-20 lg:py-28">
         <div className="container">
           <div className="space-y-12">
-            {TEAM_MEMBERS.map((member, i) => (
-              <FadeIn key={member.name} delay={i * 0.1}>
-                <div className="glass-card rounded-xl overflow-hidden">
-                  <div className="p-8 lg:p-10">
-                    <div className="flex flex-col lg:flex-row gap-8">
-                      {/* Left: Photo, Name, role, competencies */}
-                      <div className="lg:w-1/3 flex-shrink-0">
-                        {/* Photo */}
-                        <div className="mb-6 flex justify-center lg:justify-start">
-                          <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden border-2 border-[oklch(0.82_0.17_195_/_40%)] shadow-[0_0_30px_oklch(0.82_0.17_195_/_10%)]">
-                            <img
-                              src={member.photo}
-                              alt={member.name}
-                              className="w-full h-full object-cover"
-                            />
+            {TEAM_MEMBERS.map((member, i) => {
+              const profile = t.profiles[member.id];
+              return (
+                <FadeIn key={member.name} delay={i * 0.1}>
+                  <div className="glass-card rounded-xl overflow-hidden">
+                    <div className="p-8 lg:p-10">
+                      <div className="flex flex-col lg:flex-row gap-8">
+                        {/* Left: Photo, Name, role, competencies */}
+                        <div className="lg:w-1/3 flex-shrink-0">
+                          {/* Photo */}
+                          <div className="mb-6 flex justify-center lg:justify-start">
+                            <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden border-2 border-[oklch(0.82_0.17_195_/_40%)] shadow-[0_0_30px_oklch(0.82_0.17_195_/_10%)]">
+                              <img
+                                src={member.photo}
+                                alt={member.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="text-center lg:text-left mb-6">
+                            <h2 className="text-2xl font-bold text-foreground">
+                              {member.name}
+                            </h2>
+                            <p className="text-[oklch(0.82_0.17_195)] font-medium text-sm mt-1">
+                              {profile.role}
+                            </p>
+                          </div>
+
+                          <div className="space-y-2">
+                            <h4 className="text-xs font-semibold uppercase tracking-wider text-[oklch(0.82_0.17_195)] mb-3">
+                              {t.competencies}
+                            </h4>
+                            {profile.strengths.map((s) => (
+                              <div
+                                key={s}
+                                className="flex items-start gap-2 text-sm text-muted-foreground"
+                              >
+                                <span className="text-[oklch(0.82_0.17_195)] mt-1 flex-shrink-0">—</span>
+                                <span>{s}</span>
+                              </div>
+                            ))}
                           </div>
                         </div>
 
-                        <div className="text-center lg:text-left mb-6">
-                          <h2 className="text-2xl font-bold text-foreground">
-                            {member.name}
-                          </h2>
-                          <p className="text-[oklch(0.82_0.17_195)] font-medium text-sm mt-1">
-                            {member.role}
+                        {/* Right: Bio */}
+                        <div className="lg:w-2/3 space-y-4">
+                          <p className="text-muted-foreground leading-relaxed">
+                            {profile.bio}
+                          </p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            {profile.detail}
                           </p>
                         </div>
-
-                        <div className="space-y-2">
-                          <h4 className="text-xs font-semibold uppercase tracking-wider text-[oklch(0.82_0.17_195)] mb-3">
-                            Kerncompetenties
-                          </h4>
-                          {member.strengths.map((s) => (
-                            <div
-                              key={s}
-                              className="flex items-start gap-2 text-sm text-muted-foreground"
-                            >
-                              <span className="text-[oklch(0.82_0.17_195)] mt-1 flex-shrink-0">—</span>
-                              <span>{s}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Right: Bio */}
-                      <div className="lg:w-2/3 space-y-4">
-                        <p className="text-muted-foreground leading-relaxed">
-                          {member.bio}
-                        </p>
-                        <p className="text-muted-foreground leading-relaxed">
-                          {member.detail}
-                        </p>
                       </div>
                     </div>
                   </div>
-                </div>
-              </FadeIn>
-            ))}
+                </FadeIn>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -145,28 +247,15 @@ export default function FundManager() {
           <FadeIn>
             <CyanLine className="mb-6" />
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
-              Gezamenlijke basis
+              {t.sharedTitle}
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mb-12 leading-relaxed">
-              Onze gezamenlijke basis werd gelegd in de strategische wereld van professioneel poker, waar we complexe systemen ons meester maakten. In tegenstelling tot wat de meeste mensen geloven, gaat poker niet over geluk. Op de korte termijn kan geluk resultaten beïnvloeden, maar op de lange termijn worden resultaten behaald door logisch denken en het afwegen van momenten van risico en beloning.
+              {t.sharedText}
             </p>
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Probabilistisch denken",
-                text: "Beslissingen nemen op basis van verwachte waarde, niet op basis van emotie of intuïtie.",
-              },
-              {
-                title: "Emotionele discipline",
-                text: "Consistent presteren onder druk, ongeacht of de omstandigheden mee- of tegenzitten.",
-              },
-              {
-                title: "Risico-beloning analyse",
-                text: "Elke beslissing wordt gewogen op basis van de verhouding tussen potentieel verlies en potentiële winst.",
-              },
-            ].map((item, i) => (
+            {t.sharedPoints.map((item, i) => (
               <FadeIn key={item.title} delay={i * 0.1}>
                 <div className="glass-card rounded-xl p-6 h-full">
                   <div className="cyan-line mb-4" />
@@ -185,23 +274,19 @@ export default function FundManager() {
           <FadeIn>
             <CyanLine className="mb-6" />
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Dit moet bij u passen
+              {t.fitTitle}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-14">
-              Niet iedereen hoeft in te stappen. Juist duidelijkheid over geschiktheid versterkt vertrouwen en samenwerking op de lange termijn.
+              {t.fitText}
             </p>
           </FadeIn>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <FadeIn>
               <div className="glass-card rounded-xl p-8">
-                <h3 className="text-xl font-bold text-foreground mb-6">Passend</h3>
+                <h3 className="text-xl font-bold text-foreground mb-6">{t.fitGood}</h3>
                 <div className="space-y-5">
-                  {[
-                    { title: "Kapitaalbehoud telt mee", text: "Voor beleggers die streven naar gecontroleerde groei en een weloverwogen risico." },
-                    { title: "Rust en uitleg zijn belangrijk", text: "Voor families en ondernemers die discipline, inzicht en toelichting waarderen." },
-                    { title: "Lange horizon", text: "Voor investeerders die begrijpen dat geduld vaak sterker is dan voortdurende rotatie." },
-                  ].map((item) => (
+                  {t.fitGoodPoints.map((item) => (
                     <div key={item.title} className="border-t border-[oklch(0.25_0.02_250)] pt-4">
                       <h4 className="font-bold text-foreground mb-1">{item.title}</h4>
                       <p className="text-sm text-muted-foreground">{item.text}</p>
@@ -213,13 +298,9 @@ export default function FundManager() {
 
             <FadeIn delay={0.15}>
               <div className="glass-card rounded-xl p-8">
-                <h3 className="text-xl font-bold text-foreground mb-6">Minder passend</h3>
+                <h3 className="text-xl font-bold text-foreground mb-6">{t.fitLess}</h3>
                 <div className="space-y-5">
-                  {[
-                    { title: "Korte-termijn focus", text: "Minder geschikt voor beleggers die snelle omloopsnelheid of continue activiteit zoeken." },
-                    { title: "Maximaal rendement als enige maatstaf", text: "Minder passend wanneer winstmaximalisatie belangrijker is dan een gezonde bescherming van uw vermogen." },
-                    { title: "Puur transactiegericht", text: "Minder passend voor wie enkel een snelle transactie zoekt en geen behoefte heeft aan persoonlijke toelichting of een langdurige relatie." },
-                  ].map((item) => (
+                  {t.fitLessPoints.map((item) => (
                     <div key={item.title} className="border-t border-[oklch(0.25_0.02_250)] pt-4">
                       <h4 className="font-bold text-foreground mb-1">{item.title}</h4>
                       <p className="text-sm text-muted-foreground">{item.text}</p>
@@ -232,7 +313,7 @@ export default function FundManager() {
 
           <FadeIn>
             <p className="text-muted-foreground mt-10 text-center max-w-2xl mx-auto">
-              De relatie moet kloppen: een goede match is voor ons belangrijker dan een snelle start. Wij bouwen liever aan een duurzaam fundament dan aan een overhaaste eerste stap.
+              {t.fitClosing}
             </p>
           </FadeIn>
         </div>
@@ -243,10 +324,10 @@ export default function FundManager() {
         <div className="container text-center">
           <FadeIn>
             <Link
-              href="/contact"
+              href={path("contact")}
               className="inline-flex items-center gap-2 text-[oklch(0.82_0.17_195)] font-medium text-lg hover:gap-3 transition-all duration-300"
             >
-              Neem contact op voor een kennismaking
+              {t.cta}
               <ArrowRight size={18} />
             </Link>
           </FadeIn>

@@ -5,10 +5,31 @@
 import { FadeIn, CyanLine } from "@/components/AnimatedSection";
 import { Mail, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+import { useLang, usePath } from "@/i18n";
 
 const CONTACT_BG = "/images/contact-background.jpg";
 
+const COPY = {
+  nl: {
+    heroText: "Transparantie en bereikbaarheid staan centraal — neem gerust contact op voor toelichting, inzicht of vragen.",
+    title: "Neem contact met ons op",
+    text: "Voor vragen over het fonds, de structuur of het aanmeldproces kunt u ons bereiken via onderstaand e-mailadres. Wij streven ernaar om binnen twee werkdagen te reageren.",
+    documentsText: "Bekijk ook onze documentatie voor gedetailleerde informatie over het fonds en de structuur.",
+    documentsLink: "Naar documentatie",
+  },
+  en: {
+    heroText: "Transparency and accessibility are central — feel free to get in touch for an explanation, insight or questions.",
+    title: "Get in touch with us",
+    text: "For questions about the fund, the structure or the application process, you can reach us at the email address below. We aim to respond within two working days.",
+    documentsText: "Also take a look at our documentation for detailed information about the fund and the structure.",
+    documentsLink: "Go to documentation",
+  },
+};
+
 export default function Contact() {
+  const t = COPY[useLang()];
+  const path = usePath();
+
   return (
     <div>
       {/* Hero */}
@@ -25,7 +46,7 @@ export default function Contact() {
               Contact
             </h1>
             <p className="text-lg text-[oklch(0.70_0.01_250)] max-w-2xl">
-              Transparantie en bereikbaarheid staan centraal — neem gerust contact op voor toelichting, inzicht of vragen.
+              {t.heroText}
             </p>
           </FadeIn>
         </div>
@@ -41,10 +62,10 @@ export default function Contact() {
               </div>
 
               <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-4">
-                Neem contact met ons op
+                {t.title}
               </h2>
               <p className="text-muted-foreground mb-8 max-w-lg mx-auto leading-relaxed">
-                Voor vragen over het fonds, de structuur of het aanmeldproces kunt u ons bereiken via onderstaand e-mailadres. Wij streven ernaar om binnen twee werkdagen te reageren.
+                {t.text}
               </p>
 
               <a
@@ -59,13 +80,13 @@ export default function Contact() {
 
               <div className="mt-12 pt-8 border-t border-[oklch(0.25_0.02_250_/_50%)]">
                 <p className="text-sm text-muted-foreground mb-4">
-                  Bekijk ook onze documentatie voor gedetailleerde informatie over het fonds en de structuur.
+                  {t.documentsText}
                 </p>
                 <Link
-                  href="/documentatie"
+                  href={path("documents")}
                   className="inline-flex items-center gap-2 text-[oklch(0.82_0.17_195)] font-medium hover:gap-3 transition-all duration-300"
                 >
-                  Naar documentatie
+                  {t.documentsLink}
                   <ArrowRight size={16} />
                 </Link>
               </div>
