@@ -13,8 +13,8 @@ const STRUCTURE_BG = "/images/structure-background.jpg";
 const PARTNERS = [
   { icon: Building2, role: "Administrator & Accountant", name: "Affinity Co", desc: "Ondersteunt fondsadministratie, accounting, investor relations en compliance." },
   { icon: Scale, role: "Toezichthouder", name: "Financial Services Authority", desc: "Biedt het wettelijke kader waarbinnen de structuur functioneert." },
-  { icon: Landmark, role: "Bank", name: "Lloyds Bank International", desc: "Verzorgt bancaire infrastructuur, transactieverwerking en multi-currency faciliteiten." },
-  { icon: BarChart3, role: "Broker", name: "Interactive Brokers", desc: "Levert markttoegang, uitvoering, data en professionele handelsinfrastructuur." },
+  { icon: Landmark, role: "Bank", name: "RBS International", desc: "Verzorgt bancaire infrastructuur, transactieverwerking en multi-currency faciliteiten." },
+  { icon: BarChart3, role: "Broker", name: "Exante", desc: "Levert markttoegang, uitvoering, data en professionele handelsinfrastructuur." },
 ];
 
 const REPORTING = [

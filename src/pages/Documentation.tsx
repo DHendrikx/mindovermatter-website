@@ -40,6 +40,14 @@ const DOCUMENTS: DocItem[] = [
     available: true,
   },
   {
+    title: "Investment Policy Statement (IPS)",
+    description: "Het beleggingsbeleid: doelstellingen, risicokader, portefeuille-indeling en kosten.",
+    language: "EN",
+    category: "Fondsdocumenten",
+    url: "/documents/MoM-Investment-Policy-Statement-01072026.pdf",
+    available: true,
+  },
+  {
     title: "Investeerdersformulier",
     description: "Aanmeldingsformulier voor deelname aan het fonds (invulbare PDF).",
     language: "NL",
@@ -48,12 +56,20 @@ const DOCUMENTS: DocItem[] = [
     available: true,
   },
   {
-    title: "Oprichtingsaktes / Memorandum",
-    description: "Juridische documenten met betrekking tot de oprichting van het fonds.",
+    title: "Memorandum & Articles of Association (statuten)",
+    description: "De statuten van Mind over Matter Limited, vastgesteld bij de oprichting op 29 mei 2026.",
     language: "EN",
     category: "Juridisch",
-    url: "#",
-    available: false,
+    url: "/documents/MoM-Memorandum-and-Articles-29052026.pdf",
+    available: true,
+  },
+  {
+    title: "Certificate of Good Standing",
+    description: "Verklaring van het Isle of Man Companies Registry dat de vennootschap ingeschreven staat en in goede orde is (2 juli 2026).",
+    language: "EN",
+    category: "Juridisch",
+    url: "/documents/MoM-Certificate-of-Good-Standing-02072026.pdf",
+    available: true,
   },
 ];
 
