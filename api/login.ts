@@ -6,7 +6,7 @@
  * adres met ?login=failed (of =name), waarop de holding page een melding toont.
  * Een gewoon HTML-formulier, dus het werkt ook zonder JavaScript.
  */
-import { checkPassword, cleanName, createSession, isConfigured, safeNext, sessionCookie } from "../server/auth.js";
+import { checkPassword, cleanName, configProblems, createSession, isConfigured, safeNext, sessionCookie } from "../server/auth.js";
 import { recordVisit } from "../server/visits.js";
 
 function redirect(location: string, headers: Record<string, string> = {}) {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   };
 
   if (!isConfigured()) {
-    console.error("login: SITE_PASSWORD of SESSION_SECRET is niet ingesteld");
+    console.error("login: niet ingesteld: " + configProblems().join("; "));
     return redirect(back("unavailable"));
   }
 

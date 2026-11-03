@@ -39,6 +39,19 @@ export function isConfigured() {
   return config() !== null;
 }
 
+/** Wat er aan de configuratie mankeert, voor in de logs. Alleen namen en lengtes, nooit waarden. */
+export function configProblems() {
+  const problems: string[] = [];
+  const secret = process.env.SESSION_SECRET ?? "";
+  if (!process.env.SITE_PASSWORD) problems.push("SITE_PASSWORD ontbreekt");
+  if (!secret) problems.push("SESSION_SECRET ontbreekt");
+  else if (secret.length < 32) problems.push(`SESSION_SECRET is ${secret.length} tekens, minimaal 32`);
+  // Helpt bij een tikfout in de naam, zoals SITE_PASWORD of een spatie erachter.
+  const names = Object.keys(process.env).filter((k) => /pas|secret|session|admin|site/i.test(k));
+  problems.push("aanwezige namen: " + (names.map((k) => JSON.stringify(k)).join(", ") || "geen"));
+  return problems;
+}
+
 async function hmac(secret: string, data: string) {
   const key = await crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   return new Uint8Array(await crypto.subtle.sign("HMAC", key, enc.encode(data)));
