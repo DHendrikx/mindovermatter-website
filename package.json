@@ -10,6 +10,8 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
+    "@upstash/redis": "^1.41.0",
+    "@vercel/functions": "^3.10.6",
     "framer-motion": "^12.23.22",
     "lucide-react": "^0.453.0",
     "react": "^19.2.1",

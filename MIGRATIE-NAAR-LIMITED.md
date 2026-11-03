@@ -10,8 +10,8 @@ een domein zonder `.fund`-extensie.
   staan weer in `src/pages/` en `src/components/`, gelijk aan de versie die op
   mindovermatter.fund live stond. De teksten zijn nog niet nagelopen op
   fondsterminologie (zie punt 7 hieronder).
-- **PDF's**: staan weer in `public/documents/` en zijn dus publiek op te vragen
-  via `/documents/*.pdf`, zoals voorheen.
+- **PDF's**: staan weer in `public/documents/`, maar zijn net als de rest van de
+  site alleen na inloggen op te vragen. Zie `TOEGANG.md`.
 - **E-mail**: overal `contact@mindovermatter.limited`.
 - **Metadata**: `index.html` heeft de oorspronkelijke beschrijving, met
   canonical-, hreflang- en og-tags op `https://www.mindovermatter.limited/`.

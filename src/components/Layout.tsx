@@ -28,6 +28,7 @@ const COPY = {
     rights: "Alle rechten voorbehouden.",
     disclaimer: "Disclaimer",
     documents: "Documentatie",
+    logout: "Uitloggen",
     switchTo: "Bekijk deze pagina in het Engels",
     description: "Mind over Matter - Doelgericht vermogensbeheer met focus op kapitaalbehoud, discipline en transparantie.",
   },
@@ -38,6 +39,7 @@ const COPY = {
     rights: "All rights reserved.",
     disclaimer: "Disclaimer",
     documents: "Documentation",
+    logout: "Log out",
     switchTo: "View this page in Dutch",
     description: "Mind over Matter - Purposeful asset management focused on capital preservation, discipline and transparency.",
   },
@@ -108,6 +110,16 @@ function useDocumentMeta() {
       }
       link.href = url(PAGES[page][code === "x-default" ? "nl" : code]);
     }
+  }, [location]);
+}
+
+/** Meldt elke bekeken pagina aan de server, voor het bezoekersoverzicht (api/visit.ts). */
+function usePageViews() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    const body = new Blob([JSON.stringify({ path: location })], { type: "application/json" });
+    navigator.sendBeacon?.("/api/visit", body);
   }, [location]);
 }
 
@@ -307,6 +319,13 @@ function Footer() {
             >
               {t.documents}
             </Link>
+            {/* Gewone link: uitloggen is een serverroute (api/logout.ts), geen pagina van de app */}
+            <a
+              href="/api/logout"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t.logout}
+            </a>
           </div>
         </div>
       </div>
@@ -316,6 +335,7 @@ function Footer() {
 
 export default function Layout({ children }: { children: ReactNode }) {
   useDocumentMeta();
+  usePageViews();
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">

@@ -1,0 +1,233 @@
+<!doctype html>
+<!--
+  Holding page: het enige wat zonder inloggen zichtbaar is (zie middleware.ts).
+  Bewust een los HTML-bestand met eigen CSS en zonder de React-bundel: die bundel
+  bevat alle teksten van de site en blijft achter de login. Geen
+  fondsterminologie, geen rendement, geen documenten: alleen naam, status en
+  het inlogformulier.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mind over Matter | Private Exempt Fund</title>
+    <meta name="description" content="Mind over Matter, Private Exempt Fund, Isle of Man. Access by invitation only." />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mind over Matter" />
+    <meta property="og:title" content="Mind over Matter" />
+    <meta property="og:description" content="Private Exempt Fund · Isle of Man. Access by invitation only." />
+    <link rel="icon" href="/logos/favicon.ico" sizes="any" />
+    <link rel="icon" href="/logos/favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/logos/favicon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --background: oklch(0.13 0.025 250);
+        --foreground: oklch(0.92 0.01 250);
+        --card: oklch(0.16 0.025 250 / 70%);
+        --muted-foreground: oklch(0.65 0.02 250);
+        --body-text: oklch(0.75 0.01 250);
+        --border: oklch(0.30 0.02 250);
+        --primary: oklch(0.82 0.17 195);
+        --primary-foreground: oklch(0.13 0.025 250);
+        --error: oklch(0.75 0.15 25);
+        color-scheme: dark;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body { margin: 0; min-height: 100%; }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background:
+          linear-gradient(to bottom, oklch(0.13 0.025 250 / 75%), oklch(0.13 0.025 250 / 88%) 50%, oklch(0.11 0.02 250)),
+          url("/images/hero-background.jpg") center / cover no-repeat,
+          var(--background);
+        color: var(--foreground);
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 1rem;
+      }
+
+      .inner { width: 100%; max-width: 30rem; text-align: center; }
+
+      .logo { display: block; height: 7rem; width: auto; margin: 0 auto 1.75rem; }
+
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: clamp(2rem, 5vw, 2.75rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+      }
+
+      .eyebrow {
+        margin: 0;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--primary);
+      }
+
+      .rule { width: 3rem; height: 3px; margin: 1.75rem auto; background: var(--primary); }
+
+      .intro { margin: 0 0 2rem; color: var(--body-text); }
+
+      form {
+        padding: 1.5rem;
+        text-align: left;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        backdrop-filter: blur(12px);
+      }
+
+      label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; }
+
+      .row { display: flex; gap: 0.5rem; }
+
+      input[type="text"] { width: 100%; margin-bottom: 1rem; }
+
+      input[type="text"],
+      input[type="password"] {
+        flex: 1;
+        min-width: 0;
+        padding: 0.75rem 0.9rem;
+        font: inherit;
+        color: var(--foreground);
+        background: oklch(0.11 0.02 250);
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+      }
+
+      input:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      button {
+        padding: 0.75rem 1.25rem;
+        font: inherit;
+        font-weight: 600;
+        color: var(--primary-foreground);
+        background: var(--primary);
+        border: 0;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
+      button:hover { filter: brightness(1.08); }
+
+      .message { margin: 0.75rem 0 0; font-size: 0.875rem; color: var(--error); }
+      .message[hidden] { display: none; }
+
+      .consent { margin: 1rem 0 0; font-size: 0.75rem; color: var(--muted-foreground); }
+
+      footer {
+        padding: 2rem 1rem;
+        border-top: 1px solid oklch(0.25 0.02 250 / 50%);
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+      }
+
+      footer p { max-width: 44rem; margin: 0 auto 0.75rem; }
+      footer p:last-child { margin-bottom: 0; }
+      footer a { color: inherit; }
+      footer a:hover { color: var(--primary); }
+
+      @media (max-width: 420px) {
+        .row { flex-direction: column; }
+        .logo { height: 5.5rem; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="inner">
+        <img class="logo" src="/logos/mom-logo-white.svg" alt="" width="1000" height="700" />
+        <h1>Mind over Matter</h1>
+        <p class="eyebrow">Private Exempt Fund · Isle of Man</p>
+        <div class="rule" aria-hidden="true"></div>
+
+        <p class="intro">
+          Information on Mind over Matter is available to invited persons only.
+          If you have received access details, please log in below.
+        </p>
+
+        <form method="post" action="/api/login">
+          <input type="hidden" name="next" id="next" value="/" />
+          <label for="name">Your name</label>
+          <input type="text" name="name" id="name" autocomplete="name" minlength="2" maxlength="80" required />
+          <label for="password">Password</label>
+          <div class="row">
+            <input type="password" name="password" id="password" autocomplete="current-password" required />
+            <button type="submit">Log in</button>
+          </div>
+          <p class="message" id="message" role="alert" hidden></p>
+          <p class="consent">
+            By logging in you confirm that you have been personally invited to view
+            this information. We record your name and the pages and documents you
+            view, so that we know who has accessed it.
+          </p>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <p>
+        This website does not constitute an offer, invitation or solicitation to
+        subscribe for or acquire shares or any other investment, and is not directed
+        at the public.
+      </p>
+      <p>
+        &copy; <span id="year">2026</span> Mind over Matter &nbsp;·&nbsp; Isle of Man &nbsp;·&nbsp;
+        <a href="mailto:contact@mindovermatter.limited">contact@mindovermatter.limited</a>
+      </p>
+    </footer>
+
+    <script>
+      // De middleware toont deze pagina op het adres dat de bezoeker opvroeg.
+      // Na het inloggen gaat het formulier precies daarheen terug.
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var status = params.get("login");
+        params.delete("login");
+        var query = params.toString();
+        var here = location.pathname === "/holding.html" ? "/" : location.pathname + (query ? "?" + query : "") + location.hash;
+        document.getElementById("next").value = here;
+
+        var messages = {
+          failed: "That password is not correct.",
+          name: "Please enter your name.",
+          unavailable: "Logging in is temporarily unavailable. Please try again later.",
+        };
+        if (messages[status]) {
+          var el = document.getElementById("message");
+          el.textContent = messages[status];
+          el.hidden = false;
+          history.replaceState(null, "", here);
+        }
+
+        document.getElementById("year").textContent = new Date().getFullYear();
+      })();
+    </script>
+  </body>
+</html>
