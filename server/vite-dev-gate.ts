@@ -13,6 +13,7 @@ import * as login from "../api/login.js";
 import * as logout from "../api/logout.js";
 import * as visit from "../api/visit.js";
 import * as bezoekers from "../api/bezoekers.js";
+import * as me from "../api/me.js";
 
 type Handler = (request: Request) => Response | Promise<Response>;
 
@@ -22,6 +23,7 @@ const API: Record<string, Record<string, Handler>> = {
   "/api/logout": { GET: logout.GET, POST: logout.POST },
   "/api/visit": { POST: visit.POST },
   "/api/bezoekers": { GET: bezoekers.GET },
+  "/api/me": { GET: me.GET },
 };
 
 async function toRequest(req: Connect.IncomingMessage, withBody: boolean) {

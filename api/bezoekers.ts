@@ -5,6 +5,7 @@
  */
 import { readSession } from "../server/auth.js";
 import { listVisits, storageEnvNames, type Visit } from "../server/visits.js";
+import { DIVTALK_URL } from "../src/links.js";
 
 const RECENT = 200;
 
@@ -105,7 +106,10 @@ export async function GET(request: Request) {
     .map((v) => `<tr><td>${when(v.at)}</td><td>${esc(v.name)}</td><td>${KIND_LABEL[v.kind]}</td><td>${esc(v.path)}</td></tr>`)
     .join("");
 
+  const links = `<a href="/">Naar de site</a> · <a href="${DIVTALK_URL}" target="_blank" rel="noopener">Divtalk ↗</a> · <a href="/api/logout">Uitloggen</a>`;
+
   return html(`
+<p class="links">${links}</p>
 <h1>Bezoekers</h1>
 <p>${people.length} ${people.length === 1 ? "persoon" : "personen"}, ${visits.length} registraties. Namen zijn zoals bezoekers ze zelf hebben ingevuld. Eigen bezoeken met het beheerderswachtwoord tellen niet mee.</p>
 ${note}
@@ -119,5 +123,5 @@ ${note}
   <thead><tr><th>Tijd</th><th>Naam</th><th>Wat</th><th>Adres</th></tr></thead>
   <tbody>${recentRows || `<tr><td colspan="4">Nog geen bezoeken.</td></tr>`}</tbody>
 </table></div>
-<p style="margin-top:2rem"><a href="/">Naar de site</a> · <a href="/api/logout">Uitloggen</a></p>`);
+<p style="margin-top:2rem">${links}</p>`);
 }

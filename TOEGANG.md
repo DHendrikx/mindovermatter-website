@@ -17,6 +17,7 @@ bekijkt, staat in het bezoekersoverzicht.
 | `api/logout.ts` | Wist de cookie. De footer van de site heeft een link *Uitloggen*. |
 | `api/visit.ts` | Hier meldt de site elke bekeken pagina, ook bij doorklikken binnen de site. |
 | `api/bezoekers.ts` | Het bezoekersoverzicht, alleen met het beheerderswachtwoord. |
+| `api/me.ts` | Vertelt de site wie er is ingelogd, zodat beheerders de beheerlinks zien. |
 | `server/auth.ts` | Ondertekenen en controleren van de sessie, gedeeld door de bestanden hierboven. |
 | `server/visits.ts` | Opslaan en ophalen van de bezoekregistratie (Upstash Redis). |
 | `server/vite-dev-gate.ts` | Laat dit alles lokaal ook draaien in `npm run dev` en `npm run preview`. |
@@ -45,8 +46,11 @@ Belangrijke eigenschappen:
 
 ## Bezoekersoverzicht
 
-Open `/api/bezoekers` en log in met `ADMIN_PASSWORD` in plaats van het gedeelde
-wachtwoord. Met dat wachtwoord zie je ook gewoon de hele site.
+Log in met `ADMIN_PASSWORD` in plaats van het gedeelde wachtwoord. Je ziet dan
+de hele site, met rechtsonder een balkje *Beheer* met directe links naar
+**Bezoekers** (`/api/bezoekers`) en **Divtalk**. Bezoekers met het gedeelde
+wachtwoord zien dat balkje niet. Het adres van Divtalk staat in `src/links.ts`;
+pas het daar aan als Divtalk naar `.limited` verhuist.
 
 - **Per persoon**: aantal logins, bekeken pagina's, welke documenten geopend en
   het eerste en laatste bezoek.
@@ -61,7 +65,8 @@ Goed om te weten:
   wordt niet geregistreerd.
 - **Bewaard**: de laatste 10.000 registraties. Oudere vallen er vanzelf af.
 - **Opslag**: Upstash Redis. Zonder gekoppelde database werkt de site gewoon,
-  maar worden bezoeken niet bewaard. Het overzicht meldt dat dan.
+  maar worden bezoeken niet bewaard. Het overzicht meldt dat dan, met de namen
+  van de opslagvariabelen die het wél vindt.
 
 ## Instellen in Vercel
 
@@ -72,7 +77,9 @@ Goed om te weten:
    - `SESSION_SECRET`: willekeurig, minstens 32 tekens. Genereren met
      `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`
 2. **Storage → Upstash for Redis** (gratis tier) en koppel die aan dit project,
-   net als bij untapd.nl. De variabelen daarvoor worden automatisch gezet. Let op:
+   net als bij untapd.nl. De variabelen daarvoor worden automatisch gezet; het
+   voorvoegsel dat Vercel bij het koppelen vraagt (bijvoorbeeld `KV` of
+   `STORAGE`) maakt niet uit. Let op:
    *Vercel Blob* is iets anders (opslag voor bestanden) en wordt hier niet
    gebruikt. De bestaande Upstash-database van untapd.nl koppelen kan ook: de
    bezoeken staan onder de sleutel `mom:visits` en zitten de verlanglijstjes niet

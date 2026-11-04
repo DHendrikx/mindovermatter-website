@@ -5,9 +5,10 @@
  */
 import { useState, useEffect, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X } from "lucide-react";
+import { ExternalLink, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PAGES, counterpartPath, langFromPath, pageFromPath, useLang, usePath, type Lang, type PageKey } from "@/i18n";
+import { DIVTALK_URL } from "@/links";
 
 const SITE_URL = "https://www.mindovermatter.limited";
 
@@ -121,6 +122,38 @@ function usePageViews() {
     const body = new Blob([JSON.stringify({ path: location })], { type: "application/json" });
     navigator.sendBeacon?.("/api/visit", body);
   }, [location]);
+}
+
+/** Alleen na inloggen met het beheerderswachtwoord: vaste links naar het beheer, rechtsonder. */
+function AdminBar() {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((me: { role?: string } | null) => setIsAdmin(me?.role === "admin"))
+      .catch(() => setIsAdmin(false));
+  }, []);
+
+  if (!isAdmin) return null;
+
+  const link =
+    "inline-flex items-center gap-1 rounded-full px-3 py-1 text-[oklch(0.82_0.17_195)] hover:bg-[oklch(0.82_0.17_195_/_12%)] transition-colors";
+
+  return (
+    <nav
+      aria-label="Beheer"
+      className="glass-card fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-full px-2 py-1.5 text-xs font-semibold shadow-lg"
+    >
+      <span className="px-2 uppercase tracking-wider text-muted-foreground">Beheer</span>
+      <a href="/api/bezoekers" className={link}>
+        Bezoekers
+      </a>
+      <a href={DIVTALK_URL} target="_blank" rel="noopener" className={link}>
+        Divtalk <ExternalLink size={12} aria-hidden="true" />
+      </a>
+    </nav>
+  );
 }
 
 function Navbar() {
@@ -342,6 +375,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
+      <AdminBar />
     </div>
   );
 }
