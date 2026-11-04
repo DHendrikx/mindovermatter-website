@@ -4,7 +4,7 @@
  * daaronder de laatste activiteit. Server-side HTML, geen deel van de React-app.
  */
 import { readSession } from "../server/auth.js";
-import { listVisits, type Visit } from "../server/visits.js";
+import { listVisits, storageEnvNames, type Visit } from "../server/visits.js";
 
 const RECENT = 200;
 
@@ -81,7 +81,8 @@ export async function GET(request: Request) {
 
   const note =
     stored === "none"
-      ? `<p class="note">Er is geen Redis-opslag gekoppeld, dus bezoeken worden niet bewaard. Zie TOEGANG.md.</p>`
+      ? `<p class="note">Er is geen Redis-opslag gekoppeld, dus bezoeken worden niet bewaard. Zie TOEGANG.md.
+          Gevonden opslagvariabelen: ${storageEnvNames().map(esc).join(", ") || "geen"}.</p>`
       : stored === "memory"
         ? `<p class="note">Lokaal: bezoeken staan alleen in het geheugen en verdwijnen bij een herstart.</p>`
         : "";

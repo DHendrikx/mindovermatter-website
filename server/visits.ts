@@ -23,13 +23,31 @@ const MAX_VISITS = 10_000;
 const memory: Visit[] = [];
 let client: Redis | null = null;
 
+/**
+ * Vindt de URL en token van de database. Vercel laat bij het koppelen een
+ * voorvoegsel kiezen (standaard KV_, dus KV_REST_API_URL), en Upstash zelf
+ * gebruikt UPSTASH_REDIS_REST_URL. Elk voorvoegsel werkt.
+ */
+function redisEnv() {
+  const env = process.env;
+  const urlKey =
+    ["UPSTASH_REDIS_REST_URL", "KV_REST_API_URL"].find((k) => env[k]) ??
+    Object.keys(env).find((k) => /(REST_API|REDIS_REST)_URL$/.test(k) && env[k]);
+  const tokenKey = urlKey?.replace(/URL$/, "TOKEN");
+  return urlKey && tokenKey && env[tokenKey] ? { url: env[urlKey]!, token: env[tokenKey]! } : null;
+}
+
+/** Namen (geen waarden) van variabelen die op Redis-opslag lijken, voor het overzicht. */
+export function storageEnvNames() {
+  return Object.keys(process.env).filter((k) => /redis|upstash|^kv_|rest_api/i.test(k));
+}
+
 async function getRedis() {
   if (client) return client;
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
-  if (!url || !token) return null;
+  const config = redisEnv();
+  if (!config) return null;
   const { Redis } = await import("@upstash/redis");
-  client = new Redis({ url, token });
+  client = new Redis(config);
   return client;
 }
 
